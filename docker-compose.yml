@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+
+  db:
+    build:
+      context: .
+    image: guac_db
+    container_name: guac_db
+    environment:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+
+  guacd:
+    image: guacamole/guacd
+    container_name: guac_server
+
+  guacamole:
+    image: guacamole/guacamole
+    container_name: guac_client
+    ports:
+      - 8080:8080
+    environment:
+      GUACAMOLE_HOME: /config
+      GUACD_HOSTNAME: guacd
+      POSTGRES_HOSTNAME: guac_db
+      POSTGRES_DATABASE:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+    depends_on:
+      - db
+      - guacd
+    volumes:
+      - ./config:/config
+
+volumes:
+  db_data:
