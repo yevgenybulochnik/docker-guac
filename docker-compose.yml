@@ -4,7 +4,7 @@ services:
 
   db:
     build:
-      context: .
+      context: ./db
     image: guac_db
     container_name: guac_db
     environment:
@@ -14,7 +14,9 @@ services:
       - db_data:/var/lib/postgresql/data/
 
   guacd:
-    image: guacamole/guacd
+    build:
+      context: ./server
+    image: guac_server
     container_name: guac_server
 
   guacamole:
